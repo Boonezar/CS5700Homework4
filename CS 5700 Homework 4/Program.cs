@@ -1,0 +1,155 @@
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using AppLayer.IO;
+using AppLayer.GamePieces;
+using AppLayer.SolvingAlgorithms;
+
+namespace SudokuSolver
+{
+    static class Program
+    {
+        private static readonly SudokuPuzzleReader[] SudokuPuzzleReaders = new SudokuPuzzleReader[]
+                        {
+                            new SudokuPuzzleTextReader() { Name = ".txt", Description  = "Reads a Sudoku Puzzle from a text file." },
+                        };
+
+        private static readonly SolutionWriter[] SolutionWriters = new SolutionWriter[]
+                        {
+                            new SolutionConsoleWriter() { Name = "Console", Description = "Writes Sudoku Puzzle solution to the Console." },
+                            new SolutionTextWriter() { Name = ".txt", Description = "Writes Sudoku Puzzle solution to the given txt file." }
+                        };
+
+        private static readonly SudokuSolvingAlgorithmTemplate[] SudokuSolvingAlgorithms = new SudokuSolvingAlgorithmTemplate[]
+                        {
+                            new OneAwayAlgorithm(){ MyStopwatch = new System.Diagnostics.Stopwatch(), MyGameboard = null, ChangeMade = false },
+                            new TwinsAlgorithm(){ MyStopwatch = new System.Diagnostics.Stopwatch(), MyGameboard = null, ChangeMade = false }
+                        };
+
+        static void Main(string[] args)
+        {
+            //Input Validation
+            if (!IsValidParameters(args))
+                return;
+
+            string inputFilename = args[0];
+            SudokuPuzzleReader reader = GetSudokuPuzzleReader(inputFilename);
+            if (!IsValidSudokuPuzzleReader(reader))
+                return;
+            
+            Gameboard gameboard = reader.Read(inputFilename);
+            if (!gameboard.IsInitialBoardValid())
+                return;
+
+            string resultsToBeWritten = gameboard.ToString(true);
+            RunSolvingAlgorithms(gameboard);
+            resultsToBeWritten += gameboard.ToString();
+
+            string outputFilename = args.Length == 2 ? args[1] : null;
+            SolutionWriter writer = GetSolutionWriter(outputFilename);
+            writer.Write(outputFilename, resultsToBeWritten);
+        }
+
+        static void PrintCommandlineMessage()
+        {
+            Console.WriteLine("Valid input options:");
+            Console.WriteLine("-h\t\t\t\tPrint Help Message");
+            Console.WriteLine("<input file>\t\t\tProvide the input file, results to console.");
+            Console.WriteLine("<input file> <output file>\tProvide the input and output file.");
+        }
+
+        static bool IsValidParameters(string[] args)
+        {
+            if(args.Length < 1 || args.Length > 3)
+            {
+                Console.WriteLine("Invalid input...");
+                PrintCommandlineMessage();
+                return false;
+            }
+            if(args[0] == "-h")
+            {
+                PrintCommandlineMessage();
+                return false;
+            }
+            return true;
+        }
+
+        static bool IsValidSudokuPuzzleReader(SudokuPuzzleReader myReader)
+        {
+            if(myReader == null)
+            {
+                Console.WriteLine("Invalid Input File. Supported types:");
+                foreach (SudokuPuzzleReader reader in SudokuPuzzleReaders)
+                    Console.WriteLine(reader.Name);
+                return false;
+            }
+            return true;
+        }
+
+        static SudokuPuzzleReader GetSudokuPuzzleReader(string inputFilename)
+        {
+            SudokuPuzzleReader result = null;
+            string fileType = Path.GetExtension(inputFilename);
+            foreach(SudokuPuzzleReader reader in SudokuPuzzleReaders)
+            {
+                if(fileType == reader.Name)
+                {
+                    result = reader;
+                    break;
+                }
+            }
+        return result;
+        }
+
+        static SolutionWriter GetSolutionWriter(string outputFilename)
+        {
+            SolutionWriter result = null;
+            if (outputFilename == null)
+                result = SolutionWriters[0];
+            else
+            {
+                string fileType = Path.GetExtension(outputFilename);
+                foreach (SolutionWriter writer in SolutionWriters)
+                {
+                    if (fileType == writer.Name)
+                    {
+                        result = writer;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        static void SetGameboardIntoAlgorithms(Gameboard gameboard)
+        {
+            foreach (SudokuSolvingAlgorithmTemplate alg in SudokuSolvingAlgorithms)
+                alg.MyGameboard = gameboard;
+        }
+
+        static void RunSolvingAlgorithms(Gameboard gameboard)
+        {
+            SetGameboardIntoAlgorithms(gameboard);
+
+            foreach (CellContainer container in gameboard.Containers["Rows"])
+                foreach (Cell cell in container.Cells)
+                    cell.FindPossibleSymbols();
+
+            for(int i = 0; i < SudokuSolvingAlgorithms.Length; i++)
+            {
+                SudokuSolvingAlgorithmTemplate alg = SudokuSolvingAlgorithms[i];
+
+                alg.StartTimer();
+                List<Cell> resultCells = alg.FindApplicableCells();
+                if (alg.ApplyAlgorithmOnCells(resultCells))
+                {
+                    i = -1;
+                    alg.ApplyRippleEffects(resultCells);
+                }
+                alg.StopTimer();
+                if (gameboard.IsPuzzleSolved())
+                    return;
+            }
+        }
+    }
+}
