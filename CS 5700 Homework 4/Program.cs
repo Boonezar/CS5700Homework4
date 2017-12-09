@@ -22,8 +22,8 @@ namespace SudokuSolver
 
         private static readonly SudokuSolvingAlgorithmTemplate[] SudokuSolvingAlgorithms = new SudokuSolvingAlgorithmTemplate[]
                         {
-                            new OneAwayAlgorithm(){ MyStopwatch = new System.Diagnostics.Stopwatch(), MyGameboard = null, ChangeMade = false },
-                            new TwinsAlgorithm(){ MyStopwatch = new System.Diagnostics.Stopwatch(), MyGameboard = null, ChangeMade = false }
+                            new OneAwayAlgorithm(){ Name = "One Away Alg", MyStopwatch = new System.Diagnostics.Stopwatch(), MyGameboard = null, ChangeMade = false, Counter = 0 },
+                            new TwinsAlgorithm(){ Name = "Twins Alg", MyStopwatch = new System.Diagnostics.Stopwatch(), MyGameboard = null, ChangeMade = false, Counter = 0 }
                         };
 
         static void Main(string[] args)
@@ -31,20 +31,22 @@ namespace SudokuSolver
             //Input Validation
             if (!IsValidParameters(args))
                 return;
-
+            
             string inputFilename = args[0];
             SudokuPuzzleReader reader = GetSudokuPuzzleReader(inputFilename);
             if (!IsValidSudokuPuzzleReader(reader))
                 return;
-            
+
             Gameboard gameboard = reader.Read(inputFilename);
-            if (!gameboard.IsInitialBoardValid())
-                return;
-
+            
             string resultsToBeWritten = gameboard.ToString(true);
-            RunSolvingAlgorithms(gameboard);
-            resultsToBeWritten += gameboard.ToString();
-
+            if (gameboard.IsInitialBoardValid() && gameboard.IsValidGame)
+            {
+                RunSolvingAlgorithms(gameboard);
+                resultsToBeWritten += gameboard.ToString();
+                resultsToBeWritten += GetTimesFromAlgs();
+            }
+            
             string outputFilename = args.Length == 2 ? args[1] : null;
             SolutionWriter writer = GetSolutionWriter(outputFilename);
             writer.Write(outputFilename, resultsToBeWritten);
@@ -138,18 +140,30 @@ namespace SudokuSolver
             for(int i = 0; i < SudokuSolvingAlgorithms.Length; i++)
             {
                 SudokuSolvingAlgorithmTemplate alg = SudokuSolvingAlgorithms[i];
-
-                alg.StartTimer();
-                List<Cell> resultCells = alg.FindApplicableCells();
-                if (alg.ApplyAlgorithmOnCells(resultCells))
-                {
+                alg.RunSolution();
+                if (alg.ChangeMade)
                     i = -1;
-                    alg.ApplyRippleEffects(resultCells);
-                }
-                alg.StopTimer();
                 if (gameboard.IsPuzzleSolved())
                     return;
             }
+        }
+
+        static string GetTimesFromAlgs()
+        {
+            string results = "\n\r";
+            string individualTimes = "";
+            TimeSpan totalTimeSpan = new TimeSpan();
+            foreach(SudokuSolvingAlgorithmTemplate alg in SudokuSolvingAlgorithms)
+            {
+                TimeSpan ts = alg.MyStopwatch.Elapsed;
+                individualTimes += $"{alg.Name}\t{alg.Counter}\t{ts:c}\n\r";
+                totalTimeSpan = totalTimeSpan.Add(ts);
+            }
+
+            results += $"Total Time: {totalTimeSpan:c}\n\r\n\r";
+            results += "Strategy\tUses\tTime\n\r" + individualTimes;
+            
+            return results;
         }
     }
 }

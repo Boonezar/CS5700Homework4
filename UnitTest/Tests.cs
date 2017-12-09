@@ -17,32 +17,32 @@ namespace UnitTest
             {
                 for(int j = 0; j < gameboard.n; j++)
                 {
-                    Assert.AreEqual(gameboard.Columns[i].Cells[j], gameboard.Rows[j].Cells[i]);
+                    Assert.AreEqual(gameboard.Containers["Columns"][i].Cells[j], gameboard.Containers["Rows"][j].Cells[i]);
                 }
             }
         }
 
         [TestMethod]
-        public void  RowsAndBlocksMatch()
+        public void  RowsAndContainersBlocksMatch()
         {
             SudokuPuzzleReader reader = new SudokuPuzzleTextReader();
             Gameboard gameboard = reader.Read("../../../SamplePuzzles/Input/Puzzle-4x4-0001.txt");
-            Assert.AreEqual(gameboard.Rows[0].Cells[0], gameboard.Blocks[0].Cells[0]);
-            Assert.AreEqual(gameboard.Rows[0].Cells[1], gameboard.Blocks[0].Cells[1]);
-            Assert.AreEqual(gameboard.Rows[0].Cells[2], gameboard.Blocks[1].Cells[0]);
-            Assert.AreEqual(gameboard.Rows[0].Cells[3], gameboard.Blocks[1].Cells[1]);
-            Assert.AreEqual(gameboard.Rows[1].Cells[0], gameboard.Blocks[0].Cells[2]);
-            Assert.AreEqual(gameboard.Rows[1].Cells[1], gameboard.Blocks[0].Cells[3]);
-            Assert.AreEqual(gameboard.Rows[1].Cells[2], gameboard.Blocks[1].Cells[2]);
-            Assert.AreEqual(gameboard.Rows[1].Cells[3], gameboard.Blocks[1].Cells[3]);
-            Assert.AreEqual(gameboard.Rows[2].Cells[0], gameboard.Blocks[2].Cells[0]);
-            Assert.AreEqual(gameboard.Rows[2].Cells[1], gameboard.Blocks[2].Cells[1]);
-            Assert.AreEqual(gameboard.Rows[2].Cells[2], gameboard.Blocks[3].Cells[0]);
-            Assert.AreEqual(gameboard.Rows[2].Cells[3], gameboard.Blocks[3].Cells[1]);
-            Assert.AreEqual(gameboard.Rows[3].Cells[0], gameboard.Blocks[2].Cells[2]);
-            Assert.AreEqual(gameboard.Rows[3].Cells[1], gameboard.Blocks[2].Cells[3]);
-            Assert.AreEqual(gameboard.Rows[3].Cells[2], gameboard.Blocks[3].Cells[2]);
-            Assert.AreEqual(gameboard.Rows[3].Cells[3], gameboard.Blocks[3].Cells[3]);
+            Assert.AreEqual(gameboard.Containers["Rows"][0].Cells[0], gameboard.Containers["Blocks"][0].Cells[0]);
+            Assert.AreEqual(gameboard.Containers["Rows"][0].Cells[1], gameboard.Containers["Blocks"][0].Cells[1]);
+            Assert.AreEqual(gameboard.Containers["Rows"][0].Cells[2], gameboard.Containers["Blocks"][1].Cells[0]);
+            Assert.AreEqual(gameboard.Containers["Rows"][0].Cells[3], gameboard.Containers["Blocks"][1].Cells[1]);
+            Assert.AreEqual(gameboard.Containers["Rows"][1].Cells[0], gameboard.Containers["Blocks"][0].Cells[2]);
+            Assert.AreEqual(gameboard.Containers["Rows"][1].Cells[1], gameboard.Containers["Blocks"][0].Cells[3]);
+            Assert.AreEqual(gameboard.Containers["Rows"][1].Cells[2], gameboard.Containers["Blocks"][1].Cells[2]);
+            Assert.AreEqual(gameboard.Containers["Rows"][1].Cells[3], gameboard.Containers["Blocks"][1].Cells[3]);
+            Assert.AreEqual(gameboard.Containers["Rows"][2].Cells[0], gameboard.Containers["Blocks"][2].Cells[0]);
+            Assert.AreEqual(gameboard.Containers["Rows"][2].Cells[1], gameboard.Containers["Blocks"][2].Cells[1]);
+            Assert.AreEqual(gameboard.Containers["Rows"][2].Cells[2], gameboard.Containers["Blocks"][3].Cells[0]);
+            Assert.AreEqual(gameboard.Containers["Rows"][2].Cells[3], gameboard.Containers["Blocks"][3].Cells[1]);
+            Assert.AreEqual(gameboard.Containers["Rows"][3].Cells[0], gameboard.Containers["Blocks"][2].Cells[2]);
+            Assert.AreEqual(gameboard.Containers["Rows"][3].Cells[1], gameboard.Containers["Blocks"][2].Cells[3]);
+            Assert.AreEqual(gameboard.Containers["Rows"][3].Cells[2], gameboard.Containers["Blocks"][3].Cells[2]);
+            Assert.AreEqual(gameboard.Containers["Rows"][3].Cells[3], gameboard.Containers["Blocks"][3].Cells[3]);
         }
     }
 }

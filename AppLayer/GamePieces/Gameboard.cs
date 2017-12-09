@@ -54,7 +54,7 @@ namespace AppLayer.GamePieces
             string str = "\r\n";
 
             if (!IsValidGame)
-                str += "Not a valid sudoku puzzle.";
+                str += "Not a valid sudoku puzzle.\n\r";
             if (firstPrint)
             {
                 str += $"{n}\r\n";

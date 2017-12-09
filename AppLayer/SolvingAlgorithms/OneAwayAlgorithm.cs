@@ -6,7 +6,7 @@ namespace AppLayer.SolvingAlgorithms
 {
     public class OneAwayAlgorithm : SudokuSolvingAlgorithmTemplate
     {
-        public override List<Cell> FindApplicableCells()
+        protected override List<Cell> FindApplicableCells()
         {
             List<Cell> cells = new List<Cell>();
             foreach(KeyValuePair<string, List<CellContainer>> kvp in MyGameboard.Containers)
@@ -16,7 +16,7 @@ namespace AppLayer.SolvingAlgorithms
                             cells.Add(cell);
             return cells;
         }
-        public override bool ApplyAlgorithmOnCells(List<Cell> cells)
+        protected override bool ApplyAlgorithmOnCells(List<Cell> cells)
         {
             if(cells.Count == 0)
                 return false;
@@ -24,7 +24,7 @@ namespace AppLayer.SolvingAlgorithms
                 cell.Symbol = cell.PossibleSymbols[0];
             return true;
         }
-        public override void ApplyRippleEffects(List<Cell> cells)
+        protected override void ApplyRippleEffects(List<Cell> cells)
         {
             List<int> ChangedBlockList = new List<int>();
             List<int> ChangedColumnList = new List<int>();
