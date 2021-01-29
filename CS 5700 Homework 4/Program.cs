@@ -156,11 +156,11 @@ namespace SudokuSolver
             foreach(SudokuSolvingAlgorithmTemplate alg in SudokuSolvingAlgorithms)
             {
                 TimeSpan ts = alg.MyStopwatch.Elapsed;
-                individualTimes += $"{alg.Name}\t{alg.Counter}\t{ts:c}\n\r";
+                individualTimes += alg.Name+ "\t" + alg.Counter + "\t" + ts.ToString("c") + "\n\r";
                 totalTimeSpan = totalTimeSpan.Add(ts);
             }
 
-            results += $"Total Time: {totalTimeSpan:c}\n\r\n\r";
+            results += "Total Time: " + totalTimeSpan.ToString("c") + "\n\r\n\r";
             results += "Strategy\tUses\tTime\n\r" + individualTimes;
             
             return results;

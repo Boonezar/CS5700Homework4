@@ -3,5 +3,8 @@
 .vs/
 *.vpp.*
 *.vux
+*.vbak
 *.dll
 *.pdb
+bin
+obj

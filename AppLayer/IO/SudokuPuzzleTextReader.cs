@@ -62,7 +62,7 @@ namespace AppLayer.IO
             }
             catch(Exception e)
             {
-                Console.WriteLine($"Error opening file: {filename}\n{e.ToString()}");
+                Console.WriteLine("Error opening file: " + filename + "\n" + e.ToString());
                 return new Gameboard(4, new List<char>(), filename) { IsValidGame = false };
             }
         }
@@ -96,7 +96,7 @@ namespace AppLayer.IO
             double sqrt = Math.Sqrt(gameboard.n);
             if (!(sqrt % 1 == 0))
             {
-                Console.WriteLine($"Input Size not a Perfect Square: n={gameboard.n}, sqrt(n)={sqrt}");
+                Console.WriteLine("Input Size not a Perfect Square: n=" + gameboard.n + ", sqrt(n)=" + sqrt);
                 gameboard.IsValidGame = false;
                 return false;
             }
@@ -107,7 +107,7 @@ namespace AppLayer.IO
         {
             if (rowNum == gameboard.n)
             {
-                Console.WriteLine($"Invalid number of rows: n={gameboard.n}, rows={rowNum}");
+                Console.WriteLine("Invalid number of rows: n=" + gameboard.n + ", rows=" + rowNum);
                 gameboard.IsValidGame = false;
                 return false;
             }
@@ -118,7 +118,7 @@ namespace AppLayer.IO
         {
             if(columnNum == gameboard.n)
             {
-                Console.WriteLine($"Invalid number of columns: n={gameboard.n}, columns={columnNum}");
+                Console.WriteLine("Invalid number of columns: n=" + gameboard.n + ", columns= " + columnNum);
                 gameboard.IsValidGame = false;
                 return false;
             }
@@ -129,7 +129,7 @@ namespace AppLayer.IO
         {
             if (!symbols.Contains(symbol) && !symbol.Equals('-'))
             {
-                Console.WriteLine($"Invalid symbol found: {symbol}");
+                Console.WriteLine("Invalid symbol found: " + symbol);
                 gameboard.IsValidGame = false;
                 return false;
             }

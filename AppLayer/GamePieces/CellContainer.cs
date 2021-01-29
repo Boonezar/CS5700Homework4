@@ -30,7 +30,7 @@ namespace AppLayer.GamePieces
             {
                 if (symbolCheckList.Contains(symbol) && !symbol.Equals('-'))
                 {
-                    Console.WriteLine($"Invalid puzzle: {ContainerType} {ContainerNumber} has multiples of symbol: {symbol}");
+                    Console.WriteLine("Invalid puzzle: " + ContainerType + " " + ContainerNumber + " has multiples of symbol: " + symbol);
                     return false;
                 }
                 else
@@ -44,7 +44,7 @@ namespace AppLayer.GamePieces
         {
             string str = "";
             foreach (Cell cell in Cells)
-                str += $"{cell.Symbol} ";
+                str += cell.Symbol + " ";
             str += "\r\n";
             return str;
         }

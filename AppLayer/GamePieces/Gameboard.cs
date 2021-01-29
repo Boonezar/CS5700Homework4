@@ -57,9 +57,9 @@ namespace AppLayer.GamePieces
                 str += "Not a valid sudoku puzzle.\n\r";
             if (firstPrint)
             {
-                str += $"{n}\r\n";
+                str += n + "\r\n";
                 foreach (char symbol in Symbols)
-                    str += $"{symbol} ";
+                    str += symbol + " ";
                 str += "\r\n";
             }
             else if (IsPuzzleSolved())
